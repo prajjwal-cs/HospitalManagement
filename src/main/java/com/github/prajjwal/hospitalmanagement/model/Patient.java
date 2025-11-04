@@ -50,7 +50,7 @@ public class Patient {
     private BloodGroupType bloodGroup;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "patient_isurance_id")
+    @JoinColumn(name = "patient_insurance_id")
     private Insurance insurance;
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)

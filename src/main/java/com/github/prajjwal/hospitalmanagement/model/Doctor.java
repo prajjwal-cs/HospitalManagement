@@ -33,8 +33,10 @@ public class Doctor {
 
 
     @ManyToMany(mappedBy = "doctors")
+    @ToString.Exclude
     private Set<Department> departments = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor")
+    @ToString.Exclude
     private List<Appointment> appointments = new ArrayList<>();
 }
