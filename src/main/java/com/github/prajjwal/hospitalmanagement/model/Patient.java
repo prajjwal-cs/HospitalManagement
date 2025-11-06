@@ -1,58 +1,66 @@
 package com.github.prajjwal.hospitalmanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.github.prajjwal.hospitalmanagement.model.type.BloodGroupType;
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @ToString
-@Builder
-@Table(name = "patient",
+@Table(
+        name = "patient",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "unique_patient_name_birthdate", columnNames = {"name", "birthDate"})
+        },
         indexes = {
                 @Index(name = "idx_patient_birth_date", columnList = "birthDate")
-        })
+        }
+)
 public class Patient {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
+    @NotBlank
     @Column(nullable = false, length = 40)
     private String name;
 
-    @Column(unique = true, nullable = false)
-    private String email;
-
     private LocalDate birthDate;
+
+    @NotNull
+    @Email
+    @Column(nullable = false, unique = true)
+    private String email;
 
     private String gender;
 
-    @OneToOne
-    @MapsId
-    private User user;
-
     @CreationTimestamp
     @Column(updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @Enumerated(EnumType.STRING)
     private BloodGroupType bloodGroup;
 
+    @JsonManagedReference
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "patient_insurance_id")
     private Insurance insurance;
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<Appointment> appointments = new ArrayList<>();
 }

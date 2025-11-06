@@ -1,6 +1,11 @@
 package com.github.prajjwal.hospitalmanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.*;
@@ -8,35 +13,34 @@ import java.util.*;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@NoArgsConstructor
 @Builder
+@ToString
+@Table(name = "doctor")
 public class Doctor {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    @OneToOne
-    @MapsId
-    private User user;
-
-    @Column(nullable = false, length = 100)
+    @NotBlank
+    @Column(nullable = false)
     private String name;
 
-    @Column(length = 100)
+    @Size(max = 100)
     private String specialization;
 
-    @Column(unique = true, length = 100)
+    @Email
+    @Column(nullable = false, unique = true, length = 100)
     private String email;
 
-
-    @ManyToMany(mappedBy = "doctors")
+    @JsonBackReference
+    @ManyToMany(mappedBy = "doctors", fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<Department> departments = new HashSet<>();
 
-    @OneToMany(mappedBy = "doctor")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Appointment> appointments = new ArrayList<>();
 }
