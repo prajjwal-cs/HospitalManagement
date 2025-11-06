@@ -69,8 +69,7 @@ public class PatientService {
     }
 
     public void deletePatientById(Long patientId) {
-        Optional<Patient> patient = patientRepository.findById(patientId);
-        patientRepository.delete(patient);
+        patientRepository.deleteById(patientId);
     }
 
     public PatientResponseDto getPatientByEmail(String email) {
