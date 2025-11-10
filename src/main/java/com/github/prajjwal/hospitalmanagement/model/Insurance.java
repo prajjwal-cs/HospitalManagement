@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @Table(name = "insurance")
 public class Insurance {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank

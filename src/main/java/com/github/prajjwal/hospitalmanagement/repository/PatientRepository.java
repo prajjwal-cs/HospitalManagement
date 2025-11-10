@@ -2,6 +2,7 @@ package com.github.prajjwal.hospitalmanagement.repository;
 
 import com.github.prajjwal.hospitalmanagement.model.Patient;
 import com.github.prajjwal.hospitalmanagement.model.type.BloodGroupType;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -30,10 +31,9 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
     List<Patient> findByBornAfterDate(@Param("birthDate") LocalDate birthDate);
 
     @Query(value = "select * from patient", nativeQuery = true)
-    List<Patient> findAllPatients(Pageable pageable);
+    Page<Patient> findAllPatients(Pageable pageable);
 
     @Query("SELECT p FROM Patient p LEFT JOIN FETCH p.appointments")
     List<Patient> findAllPatientsWithAppointment();
 
-    void deleteById(Long patientId);
 }
