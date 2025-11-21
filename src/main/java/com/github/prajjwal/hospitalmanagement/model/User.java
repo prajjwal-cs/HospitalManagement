@@ -1,5 +1,6 @@
 package com.github.prajjwal.hospitalmanagement.model;
 
+import com.github.prajjwal.hospitalmanagement.model.type.AuthProviderType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -16,7 +17,10 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @Builder
-@Table(name = "user_details")
+// index for optimization to fast query execution
+@Table(name = "user_details", indexes = {
+        @Index(name = "idx_provider_id_provider_type", columnList = "providerId, providerType")
+})
 @AllArgsConstructor
 public class User implements UserDetails {
 
@@ -29,6 +33,11 @@ public class User implements UserDetails {
 
     @NotNull
     private String password;
+
+    private String providerId;
+
+    @Enumerated(EnumType.STRING)
+    private AuthProviderType providerType;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

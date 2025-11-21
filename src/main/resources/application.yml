@@ -1,0 +1,8 @@
+spring.security.oauth2.client:
+  registration:
+    google:
+      client-id: ajax
+      client-secret: sjdssske
+    github:
+      client-id: Ov23liOrO4ktUj7r7g3L
+      client-secret: 48c46ded107f510107cb0ba4a7833d3d86511c39
